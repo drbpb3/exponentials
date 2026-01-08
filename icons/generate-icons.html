@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Icons</title>
+</head>
+<body>
+    <h2>Right-click each icon and "Save Image As" to download</h2>
+
+    <h3>192x192 Icon:</h3>
+    <canvas id="icon192" width="192" height="192"></canvas>
+
+    <h3>512x512 Icon:</h3>
+    <canvas id="icon512" width="512" height="512"></canvas>
+
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillRect(0, 0, size, size);
+
+            // Letter e
+            ctx.fillStyle = 'white';
+            ctx.font = `italic ${size * 0.55}px Georgia, serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('e', size / 2, size / 2 + size * 0.05);
+        }
+
+        drawIcon('icon192', 192);
+        drawIcon('icon512', 512);
+
+        // Auto-download links
+        setTimeout(() => {
+            const c192 = document.getElementById('icon192');
+            const c512 = document.getElementById('icon512');
+
+            const link192 = document.createElement('a');
+            link192.download = 'icon-192.png';
+            link192.href = c192.toDataURL('image/png');
+            link192.textContent = 'Download 192x192';
+
+            const link512 = document.createElement('a');
+            link512.download = 'icon-512.png';
+            link512.href = c512.toDataURL('image/png');
+            link512.textContent = 'Download 512x512';
+
+            document.body.appendChild(document.createElement('br'));
+            document.body.appendChild(link192);
+            document.body.appendChild(document.createElement('br'));
+            document.body.appendChild(link512);
+        }, 100);
+    </script>
+</body>
+</html>

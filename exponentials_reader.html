@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponentials and Logarithms - Part 1: The Number e</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Georgia, serif;
+            line-height: 1.8;
+            color: #333;
+            background: #fafafa;
+            margin: 0;
+            /* Copy protection */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .title-page { background: linear-gradient(135deg, var(--primary), #1a252f); color: white; padding: 80px 40px; text-align: center; border-radius: 8px; margin-top: 40px; }
+        .title-page h1 { font-size: 2.5em; margin: 0 0 10px; font-weight: normal; }
+        .title-page .subtitle { font-size: 1.2em; opacity: 0.9; }
+        .title-page .author { margin-top: 30px; opacity: 0.8; }
+        .title-page a { color: #87ceeb; }
+        h2.chapter { font-size: 1.8em; color: var(--primary); margin: 50px 0 20px; padding-bottom: 10px; border-bottom: 3px solid var(--accent); }
+        h3.section { font-size: 1.4em; color: var(--primary); margin: 40px 0 15px; font-style: normal; }
+        p { margin: 15px 0; }
+        .intro { font-style: normal; color: #555; background: #f5f5f5; padding: 15px 20px; border-radius: 5px; border-left: 4px solid var(--accent); margin: 20px 0; }
+        .key-concept { background: linear-gradient(135deg, #e8f4f8, #d1e8f0); padding: 20px 25px; border-radius: 8px; margin: 25px 0; border-left: 5px solid var(--accent); }
+        .exercise { background: #fff9e6; padding: 15px 20px; border-radius: 5px; margin: 20px 0; border: 1px solid #f0e0a0; border-left: 4px solid #d4a000; }
+        .answer { background: #e8f8e8; padding: 12px 20px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #4a4; text-align: center; }
+        .math-block { text-align: center; margin: 20px 0; padding: 15px; font-size: 1.1em; }
+        figure { margin: 30px 0; text-align: center; }
+        figure img { max-width: 72%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        figure video { max-width: 56%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        footer { text-align: center; padding: 40px 20px; margin-top: 60px; background: var(--primary); color: white; }
+        footer a { color: #87ceeb; }
+
+        /* Reader-specific styles */
+        .page {
+            display: none;
+            min-height: 60vh;
+            padding-bottom: 100px;
+        }
+        .page.active {
+            display: block;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .navigation.visible {
+            transform: translateY(0);
+        }
+        .nav-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: Georgia, serif;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .nav-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .page-indicator {
+            color: white;
+            font-size: 1.1em;
+            min-width: 150px;
+            text-align: center;
+        }
+        #pageInput {
+            width: 50px;
+            padding: 5px;
+            font-size: 1em;
+            font-family: Georgia, serif;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+        #pageInput:focus {
+            outline: 2px solid var(--accent);
+        }
+        /* Hide number input spinners */
+        #pageInput::-webkit-outer-spin-button,
+        #pageInput::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        #pageInput {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Prevent image dragging */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+        }
+        .row {
+        display: flex;
+        }
+
+        .column {
+        flex: 33.33%;
+        padding: 5px;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="container">
+    <!-- Page 1: Title page -->
+    <div class="page" id="page-1">
+        <div class="title-page">
+            <h1>Exponentials and Logarithms</h1>
+            <div class="subtitle">part 1: what is \(e\,\)?</div>
+            <div class="author">Dr Brian Brooks<br><a href="http://www.mathsinsight.co.uk">www.mathsinsight.co.uk</a></div>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="page" id="page-2">
+        <h2 class="chapter">Part 1: the number \(\boldsymbol{e}\)</h2>
+                <div class="intro">Work on the question in yellow.
+                    When you are ready, navigate to the next page using arrow keys, 
+                    swiping, or hovering near the bottom of the page. 
+                    Compare your work to the answer in green.
+                    Don't go to the page too soon!
+                    Work your way through the whole document this way, 
+                    but take your time!
+                </div>
+
+        <h2 class="section">what is \(\boldsymbol{e}\) anyway?</h2>
+        <div class="intro">\(e\) is a number. A very special number, to be sure, but just a number none the less. It is absolutely crucial to so many areas of mathematics: there is, for example, little in physics that we would be able to do without knowing about \(e\), and nothing whatsoever in studies of growth, decay, and populations.</div>
+        <h2 class="section">\(\boldsymbol{e}\) by exponential graphs</h2>
+        <div class="intro">
+            <p>There are many ways to start thinking about \(e\). Here's one:</p>
+        </div>
+        <div class="exercise">Sketch the graph \(y=2^{x}\).
+        </div>
+    </div>
+
+    <!-- Page 3 -->
+    <div class="page" id="page-3">
+        <div class="answer">Here is the graph \(y=2^{x}\) with an added line.</div>
+        <figure><img src="images/image1.png" alt="Diagram"></figure>
+        <div class="exercise">What is the gradient of the red line?</div>
+    </div>
+
+    <!-- Page 4 -->
+    <div class="page" id="page-4">
+        <figure><img src="images/image1.png" alt="Diagram"></figure>
+        <div class="answer">
+            <p>\[\begin{aligned}
+                \text{gradient}&=\frac{y-\text{step}}{x-\text{step}}\\[1em]
+                &=\frac{2^{h}-1}{h}
+                \end{aligned}\]</p>
+        </div>
+    </div>
+
+    <!-- Page 5 -->
+    <div class="page" id="page-5">
+        <div class="answer">Here is the graph \(y=2^{x}\) with a tangent added at the red cross.</div>
+
+        <figure><img src="images/image2.png" alt="Diagram"></figure>
+
+        <div class="exercise">Explain why the gradient of the tangent at \(\left(0,1\right)\) is
+            \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</div>
+    </div>
+
+    <!-- Page 6 -->
+    <div class="page" id="page-6">
+        <div class="exercise">Explain why the gradient of the tangent at \(\left(0,1\right)\) is
+            \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</div>
+        <figure>
+            <video controls muted><source src="images/gif1.mp4" alt="Diagram"></video>
+        </figure>
+        <div class="answer">\[\begin{aligned}
+            \text{As }h\to0,&\text{ green dot approaches red cross}\\[1em]
+            \Rightarrow\;&\text{red line approaches blue tangent}\\[1em]
+            \Rightarrow\;&\text{red gradient}\to\text{gradient of tangent} \\[1em]
+            \Rightarrow\;&\frac{2^{h}-1}{h}\to\text{ gradient of tangent}  \\[1em]
+            \Rightarrow\;&\text{gradient of tangent}=\lim_{h\to0}\frac{2^{h}-1}{h}
+            \end{aligned}\]</div>
+    </div>
+
+    <!-- Page 7 -->
+    <div class="page" id="page-7">
+        <div class="exercise">
+            <p>Use a calculator and increasingly small values of \(h\) to find an approximate 
+                value for \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</p>
+            <p>Use this to find an approximate value for the gradient of the tangent
+                to the curve \(y=2^x\) at the point \((0,\,1)\)
+            </p>
+        </div>
+    </div>
+
+    <!-- Page 8 -->
+    <div class="page" id="page-8">
+        <div class="exercise">
+            <p>Use a calculator and increasingly small values of \(h\) to find an approximate 
+                value for \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</p>
+            <p>Use this to find an approximate value for the gradient of the tangent
+                to the curve \(y=2^x\) at the point \((0,\,1)\)
+            </p>
+        </div>
+        <div class="answer">
+            <p>when \(\displaystyle{h=0.01,\;\frac{2^{h}-1}{h}\approx 0.696}\)</p>
+            <p>when \(\displaystyle{h=0.0001,\;\frac{2^{h}-1}{h}\approx 0.693}\)</p>
+            <p>when \(\displaystyle{h=0.0000001,\;\frac{2^{h}-1}{h}\approx 0.693}\)</p>
+            <p>\[\Rightarrow \lim_{h\to 0}\frac{2^{h}-1}{h}\approx 0.693\]</p>
+            <p>\[\Rightarrow \text{gradient of tangent at }(0,\,1)\approx 0.693\]</p>
+        </div>
+    </div>
+
+    <!-- Page 9 -->
+    <div class="page" id="page-9">
+        <div class="exercise">Here are the graphs \(y=2^{x}\) and \(y=3^{x}\). Which is which, and why do they
+            cross over each other on the \(y\) axis?
+        </div>
+        <figure><img src="images/image3.png" alt="Diagram"></figure><div class="exercise">Draw a tangent to the curve \(y=3^{x}\) at the point \(\left(0,1\right)\).</div>
+        <div class="exercise">What is the formula for the gradient of this tangent?</div>
+    </div>
+
+    <!-- Page 10 -->
+    <div class="page" id="page-10">
+        
+    <figure>
+        <div class="row">
+            <div class="column">
+                <img src="images/image21.png" alt="image" style="height:100%">
+            </div>
+            <div class="column">
+                <img src="images/image22.png" alt="image" style="height:100%">
+            </div>
+        </div>
+    </figure>
+        <div class="answer">gradient\(=\displaystyle{\lim_{h\to0}\frac{3^{h}-1}{h}}\)</div>
+        <div class="exercise">Use your calculator to find an approximate value of the gradient
+            of the tangent to the curve \(y=3^x\) at the point \((0,\,1)\).</div>
+    </div>
+
+    <!-- Page 11 -->
+    <div class="page" id="page-11">
+        <div class="exercise">Use your calculator to find an approximate value of the gradient
+            of the tangent to the curve \(y=3^x\) at the point \((0,\,1)\).</div>
+        <div class="answer">
+            <p>when \(\displaystyle{h=0.01,\;\frac{3^{h}-1}{h}\approx 1.1047}\)</p>
+            <p>when \(\displaystyle{h=0.0001,\;\frac{3^{h}-1}{h}\approx 1.099}\)</p>
+            <p>when \(\displaystyle{h=0.0000001,\;\frac{3^{h}-1}{h}\approx 1.099}\)</p>
+            <p>\[\Rightarrow \lim_{h\to 0}\frac{3^{h}-1}{h}\approx 1.099\]</p>
+        </div>
+        <div class="intro">
+            <p>At the point \(\left(0,1\right)\), the gradient of the curve \(y=2^{x}\) is less than \(1\), whereas the gradient of the curve \(y=3^{x}\) is more than \(1\).</p>
+            <p>So somewhere between \(2\) and \(3\) there should be a number \(a\) that makes the gradient of the curve \(y=a^{x}\) equal to \(1\). This is the number that we call \(e\).</p>
+        </div>
+        <div class="exercise">What is the gradient of the tangent to the curve 
+            \(y=a^{x}\) at the point \((0,\,1)\) in terms of \(a\)?</div>
+    </div>
+
+    <!-- Page 12 -->
+    <div class="page" id="page-12">
+        <div class="exercise">What is the gradient of the tangent to the curve 
+            \(y=a^{x}\) at the point \((0,\,1)\) in terms of \(a\)?</div>
+        <div class="answer">The same process that we used when \(a=2\)
+            and \(a=3\) will show that
+            gradient\(=\displaystyle{\lim_{h\to0}\frac{a^{h}-1}{h}}\)</div>
+        <div class="exercise">Experiment with your calculator to find the value of \(a\) that makes this gradient as close to \(1\) as you can.</div>
+    </div>
+
+    <!-- Page 13 -->
+    <div class="page" id="page-13">
+        <div class="exercise">Experiment with your calculator to find the 
+            value of \(a\) that makes this gradient \(=\displaystyle{\lim_{h\to0}\frac{a^{h}-1}{h}}\) 
+            as close to \(1\) as you can.</div>
+
+        <div class="answer">
+            <p>taking \(\displaystyle{h=0.0000001}\)</p>
+            <p>when \(\displaystyle{a=2.7,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+            <p>when \(\displaystyle{a=2.71,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+            <p>when \(\displaystyle{a=2.72,\;\frac{a^{h}-1}{h}\gt 1}\)</p>
+            <p>\[\Rightarrow 2.71\lt a\lt 2.72\]</p>
+            <p>when \(\displaystyle{a=2.717,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+            <p>when \(\displaystyle{a=2.718,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+            <p>when \(\displaystyle{a=2.719,\;\frac{a^{h}-1}{h}\gt 1}\)</p>
+            <p>\[\Rightarrow 2.718\lt a\lt 2.719\]</p>
+        </div>
+    </div>
+
+    <!-- Page 14 -->
+    <div class="page" id="page-14">
+        <figure><img width="60%" src="images/image6.png" alt="Diagram"></figure>
+        <div class="key-concept">
+            <p>\(e\) is the number for which the gradient of
+                the curve \(y=e^{x}\) at the point \(\left(0,1\right)\) is \(1\).</p>
+            <p>Correct to 30 decimal places, \[e=2.718281828459045235360287471352\]</p>
+            <p>But \(e\) is irrational, so any attempt to write it as a decimal
+                can only be an approximation.</p>
+            <p>This property that the gradient of \(y=e^x\) at the point
+                \((0,\,1)\) is \(1\) may not seem that important. In fact, however,
+                it is this very property that will turn out to make \(e\) such
+                a crucial number in all physics (and other disciplines, too).</p>
+            <p>Next, we will begin to investigate why this is.</p>
+        </div>
+    </div>
+
+    <!-- Page 15 -->
+    <div class="page" id="page-15">
+        <h2 class="chapter">the exponential function</h2>
+        <div class="intro">
+            <p>Now we know a bit about the number \(e\),
+                it's time to think more deeply about the exponential function \(f(x)=e^{x}\), sometimes written \(\exp(x)\).</p>
+            <p>We started with graphs of the form \(y=a^{x}\), and we defined \(e\) as the number for which the gradient of \(y=e^{x}\) is \(1\) at the point \((0,1)\).</p>
+            <p>This led us to the definition of \(e\) as the number for which
+                \[\lim_{h\to0}\frac{e^{h}-1}{h}=1\]</p>
+            <p>Now, we are going to go back to graphs and use this
+                property to show that, if \(f(x)=e^{x}\), then \[f'(x)=f(x)\]
+                for all values of \(x\), not only when \(x=0\).</p>
+        </div>
+    </div>
+
+    <!-- Page 16 -->
+    <div class="page" id="page-16">
+        <div class="exercise">Here is the graph \(y=e^x\). What is the gradient of the red line?</div>
+        <figure><img width="60%" src="images/part2_image1.png" alt="Diagram showing connections"></figure>
+    </div>
+
+    <!-- Page 17 -->
+    <div class="page" id="page-17">
+        <div class="exercise">Here is the graph \(y=e^x\). What is the gradient of the red line?</div>
+        <figure><img width="60%" src="images/part2_image1.png" alt="Diagram showing connections"></figure>
+        <div class="answer">gradient\(=\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\)</div>
+        <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\).</div>
+    </div>
+
+    <!-- Page 18 -->
+    <div class="page" id="page-18">
+        <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\).</div>
+        <div class="answer">\[\begin{aligned}
+            \text{gradient}&=\frac{e^{x+h}-e^{x}}{h}\\[2em]
+            &=\frac{e^x e^h-e^{x}}{h}\\[2em]
+            &=\frac{e^x \left(e^h-1\right)}{h}\\[2em]
+            &={e^{x}\cdot\frac{e^{h}-1}{h}}
+            \end{aligned}\]</div>
+        <div class="exercise">What is the gradient of the tangent at the point \((x,e^{x})\) as a limit?</div>
+    </div>
+
+    <!-- Page 19 -->
+    <div class="page" id="page-19">
+        <div class="exercise">What is the gradient of the tangent at the point \((x,e^{x})\) as a limit?</div>
+        <div class="answer">
+            \[\begin{aligned}
+            \text{gradient}&=\lim_{h\to 0}{e^{x}\cdot\frac{e^{h}-1}{h}}
+            \end{aligned}\]
+        </div>
+        <div class="exercise">
+            <p>Explain why this is the same as \[{e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
+        </div>
+    </div>
+
+    <!-- Page 20 -->
+    <div class="page" id="page-20">
+        <div class="exercise">
+            <p>Explain why \[\lim_{h\to 0}e^{x}\cdot\frac{e^{h}-1}{h}\] is the same as \[{e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
+        </div>
+        <div class="answer">
+            As \(h\) changes, \(\frac{e^{h}-1}{h}\) changes. If I multiply 
+            this fraction by a number and then take the limit as \(h\to0\), 
+            this is the same as taking the limit first and then multiplying by
+            a number. But, as far as \(h\) is concerned, \(e^x\) is just a number.
+        </div>
+        <div class="exercise">
+            If \(f(x)=e^{x}\), what is \(f'(x)\)?</div>
+    </div>
+
+    <!-- Page 21 -->
+    <div class="page" id="page-21">
+        <div class="exercise">
+            If \(f(x)=e^{x}\), what is \(f'(x)\)?</div>
+        <div class="answer">\[\begin{aligned}
+            f'(x)&=\lim_{h\to0}\frac{e^{x+h}-e^{x}}{h}\\[6pt]
+            &=e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}\\[6pt]
+            &=e^{x}\times1\\[6pt]
+            &=e^{x}
+            \end{aligned}\]</div>
+    </div>
+
+    <!-- Page 22 -->
+    <div class="page" id="page-22">
+        <div class="key-concept">
+            <p>This gives us another characterization of \(e\):</p>
+            <p>It's the number for which the gradient of the curve \(y=e^{x}\) is always equal to the value of \(y\).</p>
+        </div>
+        <figure><img src="images/part2_image1.png" alt="Updated diagram"></figure>
+    </div>
+
+    <!-- Page 23 -->
+    <div class="page" id="page-23">
+        <h2 class="chapter">\(\boldsymbol{e}\) as a limit</h2>
+        <div class="exercise">
+            Use your calculator to find:
+            \[\begin{aligned}
+            \left(1+\frac{1}{2}\right)^{2}\\[2em]
+            \left(1+\frac{1}{3}\right)^{3}\\[2em]
+            \left(1+\frac{1}{4}\right)^{4}\\[2em]
+            \left(1+\frac{1}{5}\right)^{5}\\[2em]
+            \end{aligned}\]</div>
+    </div>
+
+    <!-- Page 24 -->
+    <div class="page" id="page-24">
+        <div class="answer">
+            
+        \[\begin{aligned}
+            \left(1+\frac{1}{2}\right)^{2}=2.25\\[2em]
+            \left(1+\frac{1}{3}\right)^{3}\approx2.3704\\[2em]
+            \left(1+\frac{1}{4}\right)^{4}\approx2.4414\\[2em]
+            \left(1+\frac{1}{5}\right)^{5}\approx2.5216\\[2em]
+            \end{aligned}\]
+        </div>
+        <div class="exercise">On your calculator, investigate this expression as \(n\) gets larger:
+            \[\left(1+\frac{1}{n}\right)^{n}\]</div>
+    </div>
+
+    <!-- Page 25 -->
+    <div class="page" id="page-25">
+        <div class="exercise">On your calculator, investigate this expression as \(n\) gets larger:
+            \[\left(1+\frac{1}{n}\right)^{n}\]</div>
+        <div class="answer">
+            \[\begin{aligned}
+            \left(1+\frac{1}{10^4}\right)^{10^4}\approx2.7181\\[2em]
+            \left(1+\frac{1}{10^9}\right)^{10^4}\approx2.71828\\[2em]
+            \left(1+\frac{1}{4}\right)^{4}\approx2.4414\\[2em]
+            \end{aligned}\]
+            <p>and it looks as though the expression is getting increasingly close to \(e\)</p>
+        </div>
+        <div class="intro">
+            Next, we will figure out why it is that
+            \[\text{as }n\to\infty,\;\left(1+\frac{1}{n}\right)^{n}\to e\]
+        </div>
+    </div>
+
+    <!-- Page 26 -->
+    <div class="page" id="page-26">
+        <div class="exercise">
+            <p>Show that, if \(\displaystyle{\lim_{h\to0}\frac{e^{h}-1}{h}=1}\),
+                then for small values of \(h\),
+                \[e\approx\left(1+h\right)^{\frac{1}{h}}\]</p>
+            <p>Use this to show that
+                \[e\approx\left(1+\frac{1}{n}\right)^{n}\]and hence that
+                \[e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^{n}\]</p>
+        </div>
+    </div>
+
+    <!-- Page 27 -->
+    <div class="page" id="page-27">
+        <div class="exercise">
+            <p>Show that, if \(\displaystyle{\lim_{h\to0}\frac{e^{h}-1}{h}=1}\),
+                then for small values of \(h\),
+                \(e\approx\left(1+h\right)^{\frac{1}{h}}\)</p>
+        </div>
+        <div class="answer">\[\begin{aligned}
+            \text{For small values of }h,\;&\frac{e^{h}-1}{h}\approx1\\[1em]
+            \Rightarrow \;&e^{h}\approx1+h\\[1em]
+            \Rightarrow \;&e\approx\left(1+h\right)^{\frac{1}{h}}\\[1em]
+            \end{aligned}\]
+        </div>
+        <div class="exercise">
+            <p>Show that
+                \(e\approx\left(1+\frac{1}{n}\right)^{n}\) and hence that
+                \[e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^{n}\]</p>
+        </div>
+        <div class="answer">
+            \[\begin{aligned}
+            \text{Put } n=\frac{1}{h},\quad &h=\frac{1}{n}\quad \text{so that as }h\to 0,\;n\to\infty\\[1em]
+            \Rightarrow \;&e\approx\left(1+\frac{1}{n}\right)^{n}\\[1em]
+            \Rightarrow \;&e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^{n}
+            \end{aligned}\]</div>
+        <div class="intro">
+            <p>Now we are going to extend this to a similar result for \(e^{x}\).</p>
+        </div>
+    </div>
+
+    <!-- Page 28 -->
+    <div class="page" id="page-28">
+        <div class="exercise">
+            Remembering that \[e=\lim_{h\to 0}(1+h)^\frac{1}{h}\]
+            and using the substitution \(k=\frac{h}{x}\), show that
+            \[e^{x}=\lim_{h\to 0}(1+xh)^\frac{1}{h}\] and hence that
+            \[e^{x}=\lim_{n\to\infty}\left(1+\frac{x}{n}\right)^{n}\]</div>
+    </div>
+
+    <!-- Page 29 -->
+    <div class="page" id="page-29">
+        <div class="exercise">
+            Remembering that \(\displaystyle{e=\lim_{h\to 0}(1+h)^\frac{1}{h}}\)
+            and using the substitution \(k=\frac{h}{x}\),
+            \[\text{show that }e^{x}=\lim_{h\to 0}(1+xh)^\frac{1}{h}\text{ and hence that}\]
+            \[e^{x}=\lim_{n\to\infty}\left(1+\frac{x}{n}\right)^{n}\]</div>
+        <div class="answer">\[\begin{aligned}
+            e&=\lim_{h\to 0}(1+h)^\frac{1}{h}\\[1em]
+            \Rightarrow e^x&=\lim_{h\to 0}(1+h)^\frac{x}{h}\\[1em]
+            &=\lim_{h\to 0}(1+xk)^\frac{1}{k}\\[1em]
+            &=\lim_{k\to 0}(1+xk)^\frac{1}{k}\\[1em]
+            &=\lim_{n\to\infty}\left(1+\frac{x}{n}\right)^{n}
+            \end{aligned}\]</div>
+    </div>
+
+    <!-- Page 30: End -->
+    <div class="page" id="page-30">
+        <div class="title-page">
+            <h1>End of Part 1</h1>
+            <div class="subtitle">what is \(e\,\)?</div>
+            <div class="author">Dr Brian Brooks<br><a href="http://www.mathsinsight.co.uk">www.mathsinsight.co.uk</a></div>
+        </div>
+    </div>
+</div>
+
+<div class="navigation">
+    <button class="nav-btn" id="firstBtn" onclick="showPage(1)">&#x25C0;&#x25C0;</button>
+    <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">Previous</button>
+    <span class="page-indicator">
+        Page <input type="number" id="pageInput" value="1" min="1" max="30" onchange="goToPage(this.value)"> of 30
+    </span>
+    <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next</button>
+    <button class="nav-btn" id="lastBtn" onclick="showPage(totalPages)">&#x25B6;&#x25B6;</button>
+</div>
+
+<script>
+    let currentPage = 1;
+    const totalPages = 30;
+
+    function showPage(pageNum) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+        // Show requested page
+        const page = document.getElementById('page-' + pageNum);
+        if (page) {
+            page.classList.add('active');
+            currentPage = pageNum;
+
+            // Update input field
+            document.getElementById('pageInput').value = currentPage;
+
+            // Update button states
+            document.getElementById('firstBtn').disabled = (currentPage === 1);
+            document.getElementById('prevBtn').disabled = (currentPage === 1);
+            document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+            document.getElementById('lastBtn').disabled = (currentPage === totalPages);
+
+            // Re-typeset MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([page]);
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    }
+
+    function changePage(delta) {
+        const newPage = currentPage + delta;
+        if (newPage >= 1 && newPage <= totalPages) {
+            showPage(newPage);
+        }
+    }
+
+    function goToPage(pageNum) {
+        const num = parseInt(pageNum);
+        if (num >= 1 && num <= totalPages) {
+            showPage(num);
+        } else {
+            // Reset to current page if invalid
+            document.getElementById('pageInput').value = currentPage;
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            changePage(1);
+        } else if (e.key === 'ArrowLeft') {
+            changePage(-1);
+        }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        showPage(1);
+    });
+
+    // Show/hide navigation on mouse proximity
+    const nav = document.querySelector('.navigation');
+    document.addEventListener('mousemove', function(e) {
+        const threshold = 100; // pixels from bottom
+        const distanceFromBottom = window.innerHeight - e.clientY;
+        if (distanceFromBottom < threshold) {
+            nav.classList.add('visible');
+        } else {
+            nav.classList.remove('visible');
+        }
+    });
+
+    // Keep nav visible while hovering over it
+    nav.addEventListener('mouseenter', function() {
+        nav.classList.add('visible');
+    });
+
+    // Disable keyboard shortcuts for saving/printing
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+
+</body>
+</html>

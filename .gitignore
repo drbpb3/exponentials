@@ -1,0 +1,6 @@
+*.pages
+*.docx
+*.epub
+.DS_Store
+.claude/
+to do

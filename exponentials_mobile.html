@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Exponentials">
+    <meta name="theme-color" content="#2c3e50">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+    <title>Exponentials and Logarithms - Part 1</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Georgia, serif;
+            line-height: 1.7;
+            color: #333;
+            background: #fafafa;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* App container */
+        .app-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .header-title {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        .page-indicator {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        /* Content area */
+        .content-wrapper {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        .pages-container {
+            display: flex;
+            height: 100%;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .page {
+            min-width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        /* Typography */
+        .container { max-width: 100%; }
+        .title-page {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            color: white;
+            padding: 60px 30px;
+            text-align: center;
+            border-radius: 12px;
+            margin-top: 20px;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .title-page h1 {
+            font-size: 1.8em;
+            margin: 0 0 15px;
+            font-weight: 500;
+        }
+        .title-page .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .title-page .author {
+            margin-top: 30px;
+            opacity: 0.8;
+            font-size: 0.95em;
+        }
+        .title-page a { color: #87ceeb; }
+
+        h2.chapter {
+            font-size: 1.5em;
+            color: var(--primary);
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--accent);
+        }
+        h3.section, h2.section {
+            font-size: 1.25em;
+            color: var(--primary);
+            margin: 25px 0 12px;
+        }
+        p { margin: 12px 0; }
+
+        .intro {
+            color: #555;
+            background: #f5f5f5;
+            padding: 15px 18px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin: 18px 0;
+            font-size: 0.95em;
+        }
+        .key-concept {
+            background: linear-gradient(135deg, #e8f4f8, #d1e8f0);
+            padding: 18px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid var(--accent);
+        }
+        .exercise {
+            background: #fff9e6;
+            padding: 15px 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+            border: 1px solid #f0e0a0;
+            border-left: 4px solid #d4a000;
+        }
+        .answer {
+            background: #e8f8e8;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4a4;
+        }
+        .math-block {
+            text-align: center;
+            margin: 18px 0;
+            padding: 12px;
+            font-size: 1em;
+            overflow-x: auto;
+        }
+
+        figure {
+            margin: 25px 0;
+            text-align: center;
+        }
+        figure img {
+            max-width: 70%;
+            max-height: 45vh;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            pointer-events: none;
+            object-fit: contain;
+        }
+        /* On smaller screens, allow images to be wider */
+        @media (max-width: 600px) {
+            figure img {
+                max-width: 90%;
+                max-height: 40vh;
+            }
+        }
+        figure video {
+            max-width: 55%;
+            max-height: 40vh;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 600px) {
+            figure video {
+                max-width: 85%;
+            }
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            max-width: 70%;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            .row {
+                max-width: 95%;
+            }
+        }
+        .column {
+            flex: 1;
+        }
+        .column img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Bottom navigation */
+        .navigation {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            padding: 15px 20px;
+            padding-bottom: calc(15px + var(--safe-bottom));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .nav-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            min-width: 100px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        .nav-btn:disabled {
+            background: #555;
+            opacity: 0.4;
+        }
+        .nav-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 50%;
+        }
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+        .nav-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        /* Swipe indicator */
+        .swipe-hint {
+            position: fixed;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .swipe-hint.visible {
+            opacity: 1;
+        }
+
+        /* Page turn animation overlay */
+        .page-turn-indicator {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            color: rgba(255,255,255,0.8);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            z-index: 500;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .page-turn-indicator.left { left: 20px; }
+        .page-turn-indicator.right { right: 20px; }
+        .page-turn-indicator.visible { opacity: 1; }
+
+        /* Table of contents button */
+        .toc-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Table of contents overlay */
+        .toc-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            padding: var(--safe-top) 20px var(--safe-bottom);
+        }
+        .toc-overlay.visible {
+            display: flex;
+        }
+        .toc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .toc-header h2 {
+            color: white;
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+        .toc-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .toc-list {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 15px 0;
+        }
+        .toc-item {
+            padding: 15px 10px;
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toc-item:active {
+            background: rgba(255,255,255,0.1);
+        }
+        .toc-item.current {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* MathJax overflow handling */
+        mjx-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="app-container">
+    <!-- Header -->
+    <div class="header">
+        <button class="toc-btn" onclick="toggleTOC()">&#9776;</button>
+        <span class="header-title">Exponentials</span>
+        <span class="page-indicator"><span id="currentPageNum">1</span> / 30</span>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <div class="pages-container" id="pagesContainer">
+
+            <!-- Page 1: Title page -->
+            <div class="page" data-page="1">
+                <div class="title-page">
+                    <h1>Exponentials and Logarithms</h1>
+                    <div class="subtitle">part 1: what is \(e\,\)?</div>
+                    <div class="author">Dr Brian Brooks<br><a href="http://www.mathsinsight.co.uk">www.mathsinsight.co.uk</a></div>
+                </div>
+            </div>
+
+            <!-- Page 2 -->
+            <div class="page" data-page="2">
+                <h2 class="chapter">Part 1: the number \(\boldsymbol{e}\)</h2>
+                <h2 class="section">what is \(\boldsymbol{e}\) anyway?</h2>
+                <div class="intro">\(e\) is a number. A very special number, to be sure, but just a number none the less. It is absolutely crucial to so many areas of mathematics: there is, for example, little in physics that we would be able to do without knowing about \(e\), and nothing whatsoever in studies of growth, decay, and populations.</div>
+                <h2 class="section">\(\boldsymbol{e}\) by exponential graphs</h2>
+                <div class="intro">
+                    <p>We'll start with an approach to \({e}\) that is not necessarily the most common entry point, and perhaps not even the most relevant to applications, but it is the most accessible: it builds most straightforwardly on previous work.</p>
+                    <p>Later, we will start again with the usual entry point and the one that is most closely related to applications: population growth.</p>
+                </div>
+                <div class="exercise">Sketch the graph \(y=2^{x}\).</div>
+            </div>
+
+            <!-- Page 3 -->
+            <div class="page" data-page="3">
+                <div class="answer">Here is the graph \(y=2^{x}\) with an added line.</div>
+                <figure><img src="images/image1.png" alt="Diagram"></figure>
+                <div class="exercise">What is the gradient of the red line?</div>
+            </div>
+
+            <!-- Page 4 -->
+            <div class="page" data-page="4">
+                <figure><img src="images/image1.png" alt="Diagram"></figure>
+                <div class="answer">
+                    <p>\[\begin{aligned}
+                        \text{gradient}&=\frac{y-\text{step}}{x-\text{step}}\\[1em]
+                        &=\frac{2^{h}-1}{h}
+                        \end{aligned}\]</p>
+                </div>
+            </div>
+
+            <!-- Page 5 -->
+            <div class="page" data-page="5">
+                <div class="answer">Here is the graph \(y=2^{x}\) with a tangent added at the red cross.</div>
+                <figure><img src="images/image2.png" alt="Diagram"></figure>
+                <div class="exercise">Explain why the gradient of the tangent at \(\left(0,1\right)\) is
+                    \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</div>
+            </div>
+
+            <!-- Page 6 -->
+            <div class="page" data-page="6">
+                <div class="exercise">Explain why the gradient of the tangent at \(\left(0,1\right)\) is
+                    \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</div>
+                <figure>
+                    <video controls muted playsinline><source src="images/gif1.mp4" alt="Diagram"></video>
+                </figure>
+                <div class="answer">\[\begin{aligned}
+                    \text{As }h\to0,&\text{ green dot approaches red cross}\\[1em]
+                    \Rightarrow\;&\text{red line approaches blue tangent}\\[1em]
+                    \Rightarrow\;&\text{red gradient}\to\text{gradient of tangent} \\[1em]
+                    \Rightarrow\;&\frac{2^{h}-1}{h}\to\text{ gradient of tangent}  \\[1em]
+                    \Rightarrow\;&\text{gradient of tangent}=\lim_{h\to0}\frac{2^{h}-1}{h}
+                    \end{aligned}\]</div>
+            </div>
+
+            <!-- Page 7 -->
+            <div class="page" data-page="7">
+                <div class="exercise">
+                    <p>Use a calculator and increasingly small values of \(h\) to find an approximate
+                        value for \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</p>
+                    <p>Use this to find an approximate value for the gradient of the tangent
+                        to the curve \(y=2^x\) at the point \((0,\,1)\)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Page 8 -->
+            <div class="page" data-page="8">
+                <div class="exercise">
+                    <p>Use a calculator and increasingly small values of \(h\) to find an approximate
+                        value for \(\displaystyle{\lim_{h\to0}\frac{2^{h}-1}{h}}\)</p>
+                    <p>Use this to find an approximate value for the gradient of the tangent
+                        to the curve \(y=2^x\) at the point \((0,\,1)\)
+                    </p>
+                </div>
+                <div class="answer">
+                    <p>when \(\displaystyle{h=0.01,\;\frac{2^{h}-1}{h}\approx 0.696}\)</p>
+                    <p>when \(\displaystyle{h=0.0001,\;\frac{2^{h}-1}{h}\approx 0.693}\)</p>
+                    <p>when \(\displaystyle{h=0.0000001,\;\frac{2^{h}-1}{h}\approx 0.693}\)</p>
+                    <p>\[\Rightarrow \lim_{h\to 0}\frac{2^{h}-1}{h}\approx 0.693\]</p>
+                    <p>\[\Rightarrow \text{gradient of tangent at }(0,\,1)\approx 0.693\]</p>
+                </div>
+            </div>
+
+            <!-- Page 9 -->
+            <div class="page" data-page="9">
+                <div class="exercise">Here are the graphs \(y=2^{x}\) and \(y=3^{x}\). Which is which, and why do they
+                    cross over each other on the \(y\) axis?
+                </div>
+                <figure><img src="images/image3.png" alt="Diagram"></figure>
+                <div class="exercise">Draw a tangent to the curve \(y=3^{x}\) at the point \(\left(0,1\right)\).</div>
+                <div class="exercise">What is the formula for the gradient of this tangent?</div>
+            </div>
+
+            <!-- Page 10 -->
+            <div class="page" data-page="10">
+                <figure>
+                    <div class="row">
+                        <div class="column">
+                            <img src="images/image21.png" alt="image">
+                        </div>
+                        <div class="column">
+                            <img src="images/image22.png" alt="image">
+                        </div>
+                    </div>
+                </figure>
+                <div class="answer">gradient\(=\displaystyle{\lim_{h\to0}\frac{3^{h}-1}{h}}\)</div>
+                <div class="exercise">Use your calculator to find an approximate value of the gradient
+                    of the tangent to the curve \(y=3^x\) at the point \((0,\,1)\).</div>
+            </div>
+
+            <!-- Page 11 -->
+            <div class="page" data-page="11">
+                <div class="exercise">Use your calculator to find an approximate value of the gradient
+                    of the tangent to the curve \(y=3^x\) at the point \((0,\,1)\).</div>
+                <div class="answer">
+                    <p>when \(\displaystyle{h=0.01,\;\frac{3^{h}-1}{h}\approx 1.1047}\)</p>
+                    <p>when \(\displaystyle{h=0.0001,\;\frac{3^{h}-1}{h}\approx 1.099}\)</p>
+                    <p>when \(\displaystyle{h=0.0000001,\;\frac{3^{h}-1}{h}\approx 1.099}\)</p>
+                    <p>\[\Rightarrow \lim_{h\to 0}\frac{3^{h}-1}{h}\approx 1.099\]</p>
+                </div>
+                <div class="intro">
+                    <p>At the point \(\left(0,1\right)\), the gradient of the curve \(y=2^{x}\) is less than \(1\), whereas the gradient of the curve \(y=3^{x}\) is more than \(1\).</p>
+                    <p>So somewhere between \(2\) and \(3\) there should be a number \(a\) that makes the gradient of the curve \(y=a^{x}\) equal to \(1\). This is the number that we call \(e\).</p>
+                </div>
+                <div class="exercise">What is the gradient of the tangent to the curve
+                    \(y=a^{x}\) at the point \((0,\,1)\) in terms of \(a\)?</div>
+            </div>
+
+            <!-- Page 12 -->
+            <div class="page" data-page="12">
+                <div class="exercise">What is the gradient of the tangent to the curve
+                    \(y=a^{x}\) at the point \((0,\,1)\) in terms of \(a\)?</div>
+                <div class="answer">The same process that we used when \(a=2\)
+                    and \(a=3\) will show that
+                    gradient\(=\displaystyle{\lim_{h\to0}\frac{a^{h}-1}{h}}\)</div>
+                <div class="exercise">Experiment with your calculator to find the value of \(a\) that makes this gradient as close to \(1\) as you can.</div>
+            </div>
+
+            <!-- Page 13 -->
+            <div class="page" data-page="13">
+                <div class="exercise">Experiment with your calculator to find the
+                    value of \(a\) that makes this gradient \(=\displaystyle{\lim_{h\to0}\frac{a^{h}-1}{h}}\)
+                    as close to \(1\) as you can.</div>
+                <div class="answer">
+                    <p>taking \(\displaystyle{h=0.0000001}\)</p>
+                    <p>when \(\displaystyle{a=2.7,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+                    <p>when \(\displaystyle{a=2.71,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+                    <p>when \(\displaystyle{a=2.72,\;\frac{a^{h}-1}{h}\gt 1}\)</p>
+                    <p>\[\Rightarrow 2.71\lt a\lt 2.72\]</p>
+                    <p>when \(\displaystyle{a=2.717,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+                    <p>when \(\displaystyle{a=2.718,\;\frac{a^{h}-1}{h}\lt 1}\)</p>
+                    <p>when \(\displaystyle{a=2.719,\;\frac{a^{h}-1}{h}\gt 1}\)</p>
+                    <p>\[\Rightarrow 2.718\lt a\lt 2.719\]</p>
+                </div>
+            </div>
+
+            <!-- Page 14 -->
+            <div class="page" data-page="14">
+                <figure><img src="images/image6.png" alt="Diagram"></figure>
+                <div class="key-concept">
+                    <p>\(e\) is the number for which the gradient of
+                        the curve \(y=e^{x}\) at the point \(\left(0,1\right)\) is \(1\).</p>
+                    <p>Correct to 30 decimal places, \[e=2.718281828459045235360287471352\]</p>
+                    <p>But \(e\) is irrational, so any attempt to write it as a decimal
+                        can only be an approximation.</p>
+                    <p>This property that the gradient of \(y=e^x\) at the point
+                        \((0,\,1)\) is \(1\) may not seem that important. In fact, however,
+                        it is this very property that will turn out to make \(e\) such
+                        a crucial number in all physics (and other disciplines, too).</p>
+                    <p>Next, we will begin to investigate why this is.</p>
+                </div>
+            </div>
+
+            <!-- Page 15 -->
+            <div class="page" data-page="15">
+                <h2 class="chapter">the exponential function</h2>
+                <div class="intro">
+                    <p>Now we know a bit about the number \(e\),
+                        it's time to think more deeply about the exponential function \(f(x)=e^{x}\), sometimes written \(\exp(x)\).</p>
+                    <p>We started with graphs of the form \(y=a^{x}\), and we defined \(e\) as the number for which the gradient of \(y=e^{x}\) is \(1\) at the point \((0,1)\).</p>
+                    <p>This led us to the definition of \(e\) as the number for which
+                        \[\lim_{h\to0}\frac{e^{h}-1}{h}=1\]</p>
+                    <p>Now, we are going to go back to graphs and use this
+                        property to show that, if \(f(x)=e^{x}\), then \[f'(x)=f(x)\]
+                        for all values of \(x\), not only when \(x=0\).</p>
+                </div>
+            </div>
+
+            <!-- Page 16 -->
+            <div class="page" data-page="16">
+                <div class="exercise">Here is the graph \(y=e^x\). What is the gradient of the red line?</div>
+                <figure><img src="images/part2_image1.png" alt="Diagram showing connections"></figure>
+            </div>
+
+            <!-- Page 17 -->
+            <div class="page" data-page="17">
+                <div class="exercise">Here is the graph \(y=e^x\). What is the gradient of the red line?</div>
+                <figure><img src="images/part2_image1.png" alt="Diagram showing connections"></figure>
+                <div class="answer">gradient\(=\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\)</div>
+                <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\).</div>
+            </div>
+
+            <!-- Page 18 -->
+            <div class="page" data-page="18">
+                <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\).</div>
+                <div class="answer">\[\begin{aligned}
+                    \text{gradient}&=\frac{e^{x+h}-e^{x}}{h}\\[2em]
+                    &=\frac{e^x e^h-e^{x}}{h}\\[2em]
+                    &=\frac{e^x \left(e^h-1\right)}{h}\\[2em]
+                    &={e^{x}\cdot\frac{e^{h}-1}{h}}
+                    \end{aligned}\]</div>
+                <div class="exercise">What is the gradient of the tangent at the point \((x,e^{x})\) as a limit?</div>
+            </div>
+
+            <!-- Page 19 -->
+            <div class="page" data-page="19">
+                <div class="exercise">What is the gradient of the tangent at the point \((x,e^{x})\) as a limit?</div>
+                <div class="answer">
+                    \[\begin{aligned}
+                    \text{gradient}&=\lim_{h\to 0}{e^{x}\cdot\frac{e^{h}-1}{h}}
+                    \end{aligned}\]
+                </div>
+                <div class="exercise">
+                    <p>Explain why this is the same as \[{e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
+                </div>
+            </div>
+
+            <!-- Page 20 -->
+            <div class="page" data-page="20">
+                <div class="exercise">
+                    <p>Explain why \[\lim_{h\to 0}e^{x}\cdot\frac{e^{h}-1}{h}\] is the same as \[{e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
+                </div>
+                <div class="answer">
+                    As \(h\) changes, \(\frac{e^{h}-1}{h}\) changes. If I multiply
+                    this fraction by a number and then take the limit as \(h\to0\),
+                    this is the same as taking the limit first and then multiplying by
+                    a number. But, as far as \(h\) is concerned, \(e^x\) is just a number.
+                </div>
+                <div class="exercise">
+                    If \(f(x)=e^{x}\), what is \(f'(x)\)?</div>
+            </div>
+
+            <!-- Page 21 -->
+            <div class="page" data-page="21">
+                <div class="exercise">
+                    If \(f(x)=e^{x}\), what is \(f'(x)\)?</div>
+                <div class="answer">\[\begin{aligned}
+                    f'(x)&=\lim_{h\to0}\frac{e^{x+h}-e^{x}}{h}\\[6pt]
+                    &=e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}\\[6pt]
+                    &=e^{x}\times1\\[6pt]
+                    &=e^{x}
+                    \end{aligned}\]</div>
+            </div>
+
+            <!-- Page 22 -->
+            <div class="page" data-page="22">
+                <div class="key-concept">
+                    <p>This gives us another characterization of \(e\):</p>
+                    <p>It's the number for which the gradient of the curve \(y=e^{x}\) is always equal to the value of \(y\).</p>
+                </div>
+                <figure><img src="images/part2_image1.png" alt="Updated diagram"></figure>
+            </div>
+
+            <!-- Page 23 -->
+            <div class="page" data-page="23">
+                <h2 class="chapter">\(\boldsymbol{e}\) as a limit</h2>
+                <div class="exercise">
+                    Use your calculator to find:
+                    \[\begin{aligned}
+                    \left(1+\frac{1}{2}\right)^{2}\\[2em]
+                    \left(1+\frac{1}{3}\right)^{3}\\[2em]
+                    \left(1+\frac{1}{4}\right)^{4}\\[2em]
+                    \left(1+\frac{1}{5}\right)^{5}\\[2em]
+                    \end{aligned}\]</div>
+            </div>
+
+            <!-- Page 24 -->
+            <div class="page" data-page="24">
+                <div class="answer">
+                \[\begin{aligned}
+                    \left(1+\frac{1}{2}\right)^{2}=2.25\\[2em]
+                    \left(1+\frac{1}{3}\right)^{3}\approx2.3704\\[2em]
+                    \left(1+\frac{1}{4}\right)^{4}\approx2.4414\\[2em]
+                    \left(1+\frac{1}{5}\right)^{5}\approx2.5216\\[2em]
+                    \end{aligned}\]
+                </div>
+                <div class="exercise">On your calculator, investigate this expression as \(n\) gets larger:
+                    \[\left(1+\frac{1}{n}\right)^{n}\]</div>
+            </div>
+
+            <!-- Page 25 -->
+            <div class="page" data-page="25">
+                <div class="exercise">On your calculator, investigate this expression as \(n\) gets larger:
+                    \[\left(1+\frac{1}{n}\right)^{n}\]</div>
+                <div class="answer">
+                    \[\begin{aligned}
+                    \left(1+\frac{1}{10^4}\right)^{10^4}\approx2.7181\\[2em]
+                    \left(1+\frac{1}{10^9}\right)^{10^4}\approx2.71828\\[2em]
+                    \left(1+\frac{1}{4}\right)^{4}\approx2.4414\\[2em]
+                    \end{aligned}\]
+                    <p>and it looks as though the expression is getting increasingly close to \(e\)</p>
+                </div>
+                <div class="intro">
+                    Next, we will figure out why it is that
+                    \[\text{as }n\to\infty,\;\left(1+\frac{1}{n}\right)^{n}\to e\]
+                </div>
+            </div>
+
+            <!-- Page 26 -->
+            <div class="page" data-page="26">
+                <div class="exercise">
+                    <p>Show that, if \(\displaystyle{\lim_{h\to0}\frac{e^{h}-1}{h}=1}\),
+                        then for small values of \(h\),
+                        \[e\approx\left(1+h\right)^{\frac{1}{h}}\]</p>
+                    <p>Use this to show that
+                        \[e\approx\left(1+\frac{1}{n}\right)^{n}\]and hence that
+                        \[e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^{n}\]</p>
+                </div>
+            </div>
+
+            <!-- Page 27 -->
+            <div class="page" data-page="27">
+                <div class="exercise">
+                    <p>Show that, if \(\displaystyle{\lim_{h\to0}\frac{e^{h}-1}{h}=1}\),
+                        then for small values of \(h\),
+                        \(e\approx\left(1+h\right)^{\frac{1}{h}}\)</p>
+                </div>
+                <div class="answer">\[\begin{aligned}
+                    \text{For small values of }h,\;&\frac{e^{h}-1}{h}\approx1\\[1em]
+                    \Rightarrow \;&e^{h}\approx1+h\\[1em]
+                    \Rightarrow \;&e\approx\left(1+h\right)^{\frac{1}{h}}\\[1em]
+                    \end{aligned}\]
+                </div>
+                <div class="exercise">
+                    <p>Show that
+                        \(e\approx\left(1+\frac{1}{n}\right)^{n}\) and hence that
+                        \[e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^{n}\]</p>
+                </div>
+                <div class="answer">
+                    \[\begin{aligned}
+                    \text{Put } n=\frac{1}{h},\quad &h=\frac{1}{n}\quad \text{so that as }h\to 0,\;n\to\infty\\[1em]
+                    \Rightarrow \;&e\approx\left(1+\frac{1}{n}\right)^{n}\\[1em]
+                    \Rightarrow \;&e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^{n}
+                    \end{aligned}\]</div>
+                <div class="intro">
+                    <p>Now we are going to extend this to a similar result for \(e^{x}\).</p>
+                </div>
+            </div>
+
+            <!-- Page 28 -->
+            <div class="page" data-page="28">
+                <div class="exercise">
+                    Remembering that \[e=\lim_{h\to 0}(1+h)^\frac{1}{h}\]
+                    and using the substitution \(k=\frac{h}{x}\), show that
+                    \[e^{x}=\lim_{h\to 0}(1+xh)^\frac{1}{h}\] and hence that
+                    \[e^{x}=\lim_{n\to\infty}\left(1+\frac{x}{n}\right)^{n}\]</div>
+            </div>
+
+            <!-- Page 29 -->
+            <div class="page" data-page="29">
+                <div class="exercise">
+                    Remembering that \(\displaystyle{e=\lim_{h\to 0}(1+h)^\frac{1}{h}}\)
+                    and using the substitution \(k=\frac{h}{x}\),
+                    \[\text{show that }e^{x}=\lim_{h\to 0}(1+xh)^\frac{1}{h}\text{ and hence that}\]
+                    \[e^{x}=\lim_{n\to\infty}\left(1+\frac{x}{n}\right)^{n}\]</div>
+                <div class="answer">\[\begin{aligned}
+                    e&=\lim_{h\to 0}(1+h)^\frac{1}{h}\\[1em]
+                    \Rightarrow e^x&=\lim_{h\to 0}(1+h)^\frac{x}{h}\\[1em]
+                    &=\lim_{h\to 0}(1+xk)^\frac{1}{k}\\[1em]
+                    &=\lim_{k\to 0}(1+xk)^\frac{1}{k}\\[1em]
+                    &=\lim_{n\to\infty}\left(1+\frac{x}{n}\right)^{n}
+                    \end{aligned}\]</div>
+            </div>
+
+            <!-- Page 30: End -->
+            <div class="page" data-page="30">
+                <div class="title-page">
+                    <h1>End of Part 1</h1>
+                    <div class="subtitle">what is \(e\,\)?</div>
+                    <div class="author">Dr Brian Brooks<br><a href="http://www.mathsinsight.co.uk">www.mathsinsight.co.uk</a></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">Previous</button>
+        <div class="nav-dots" id="navDots"></div>
+        <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Next</button>
+    </div>
+</div>
+
+<!-- Swipe hint -->
+<div class="swipe-hint" id="swipeHint">Swipe to navigate</div>
+
+<!-- Page turn indicators -->
+<div class="page-turn-indicator left" id="leftIndicator">&#x276E;</div>
+<div class="page-turn-indicator right" id="rightIndicator">&#x276F;</div>
+
+<!-- Table of Contents Overlay -->
+<div class="toc-overlay" id="tocOverlay">
+    <div class="toc-header">
+        <h2>Contents</h2>
+        <button class="toc-close" onclick="toggleTOC()">&times;</button>
+    </div>
+    <div class="toc-list" id="tocList">
+        <div class="toc-item" onclick="goToPage(1)">1. Title</div>
+        <div class="toc-item" onclick="goToPage(2)">2. What is e?</div>
+        <div class="toc-item" onclick="goToPage(3)">3. Graph y = 2^x</div>
+        <div class="toc-item" onclick="goToPage(4)">4. Gradient formula</div>
+        <div class="toc-item" onclick="goToPage(5)">5. Tangent at (0,1)</div>
+        <div class="toc-item" onclick="goToPage(6)">6. Limit explanation</div>
+        <div class="toc-item" onclick="goToPage(7)">7. Calculator exercise</div>
+        <div class="toc-item" onclick="goToPage(8)">8. Gradient approximation</div>
+        <div class="toc-item" onclick="goToPage(9)">9. Graphs 2^x and 3^x</div>
+        <div class="toc-item" onclick="goToPage(10)">10. Gradient of 3^x</div>
+        <div class="toc-item" onclick="goToPage(11)">11. Finding e</div>
+        <div class="toc-item" onclick="goToPage(12)">12. General formula</div>
+        <div class="toc-item" onclick="goToPage(13)">13. Approximating e</div>
+        <div class="toc-item" onclick="goToPage(14)">14. Definition of e</div>
+        <div class="toc-item" onclick="goToPage(15)">15. Exponential function</div>
+        <div class="toc-item" onclick="goToPage(16)">16. Graph y = e^x</div>
+        <div class="toc-item" onclick="goToPage(17)">17. Gradient of e^x</div>
+        <div class="toc-item" onclick="goToPage(18)">18. Factorization</div>
+        <div class="toc-item" onclick="goToPage(19)">19. Tangent gradient</div>
+        <div class="toc-item" onclick="goToPage(20)">20. Limit properties</div>
+        <div class="toc-item" onclick="goToPage(21)">21. Derivative of e^x</div>
+        <div class="toc-item" onclick="goToPage(22)">22. Key result</div>
+        <div class="toc-item" onclick="goToPage(23)">23. e as a limit</div>
+        <div class="toc-item" onclick="goToPage(24)">24. Sequence values</div>
+        <div class="toc-item" onclick="goToPage(25)">25. Limit investigation</div>
+        <div class="toc-item" onclick="goToPage(26)">26. Proof exercise</div>
+        <div class="toc-item" onclick="goToPage(27)">27. Limit derivation</div>
+        <div class="toc-item" onclick="goToPage(28)">28. e^x limit exercise</div>
+        <div class="toc-item" onclick="goToPage(29)">29. e^x limit proof</div>
+        <div class="toc-item" onclick="goToPage(30)">30. End</div>
+    </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    const totalPages = 30;
+    const pagesContainer = document.getElementById('pagesContainer');
+
+    // Touch handling
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let isSwiping = false;
+    let startTranslate = 0;
+
+    // Create navigation dots
+    function createDots() {
+        const dotsContainer = document.getElementById('navDots');
+        // Show subset of dots on mobile
+        const maxDots = 10;
+        const step = Math.ceil(totalPages / maxDots);
+
+        for (let i = 1; i <= totalPages; i += step) {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot';
+            dot.dataset.page = i;
+            dot.onclick = () => goToPage(i);
+            dotsContainer.appendChild(dot);
+        }
+        updateDots();
+    }
+
+    function updateDots() {
+        const dots = document.querySelectorAll('.nav-dot');
+        dots.forEach(dot => {
+            const page = parseInt(dot.dataset.page);
+            const step = Math.ceil(totalPages / 10);
+            // Highlight dot if current page is within its range
+            if (currentPage >= page && currentPage < page + step) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    function showPage(pageNum, animate = true) {
+        if (pageNum < 1 || pageNum > totalPages) return;
+
+        currentPage = pageNum;
+        const offset = -(pageNum - 1) * 100;
+
+        pagesContainer.style.transition = animate ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none';
+        pagesContainer.style.transform = `translateX(${offset}%)`;
+
+        // Update UI
+        document.getElementById('currentPageNum').textContent = currentPage;
+        document.getElementById('prevBtn').disabled = (currentPage === 1);
+        document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+        updateDots();
+        updateTOC();
+
+        // Typeset MathJax for current and adjacent pages
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            const pages = document.querySelectorAll('.page');
+            const pagesToTypeset = [];
+            for (let i = Math.max(0, pageNum - 2); i < Math.min(totalPages, pageNum + 2); i++) {
+                pagesToTypeset.push(pages[i]);
+            }
+            MathJax.typesetPromise(pagesToTypeset);
+        }
+
+        // Save progress
+        localStorage.setItem('exponentials_page', pageNum);
+    }
+
+    function changePage(delta) {
+        showPage(currentPage + delta);
+    }
+
+    function goToPage(pageNum) {
+        showPage(pageNum);
+        toggleTOC(false);
+    }
+
+    function toggleTOC(show) {
+        const overlay = document.getElementById('tocOverlay');
+        if (show === undefined) {
+            overlay.classList.toggle('visible');
+        } else if (show) {
+            overlay.classList.add('visible');
+        } else {
+            overlay.classList.remove('visible');
+        }
+    }
+
+    function updateTOC() {
+        const items = document.querySelectorAll('.toc-item');
+        items.forEach((item, index) => {
+            if (index + 1 === currentPage) {
+                item.classList.add('current');
+            } else {
+                item.classList.remove('current');
+            }
+        });
+    }
+
+    // Touch event handlers
+    pagesContainer.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = false;
+        startTranslate = -(currentPage - 1) * 100;
+        pagesContainer.style.transition = 'none';
+    }, { passive: true });
+
+    pagesContainer.addEventListener('touchmove', function(e) {
+        const deltaX = e.touches[0].clientX - touchStartX;
+        const deltaY = e.touches[0].clientY - touchStartY;
+
+        // Determine if horizontal swipe
+        if (!isSwiping && Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            isSwiping = true;
+        }
+
+        if (isSwiping) {
+            const containerWidth = pagesContainer.parentElement.offsetWidth;
+            const percentMove = (deltaX / containerWidth) * 100;
+            let newTranslate = startTranslate + percentMove;
+
+            // Add resistance at edges
+            if (newTranslate > 0) {
+                newTranslate = newTranslate * 0.3;
+            } else if (newTranslate < -(totalPages - 1) * 100) {
+                const overflow = newTranslate + (totalPages - 1) * 100;
+                newTranslate = -(totalPages - 1) * 100 + overflow * 0.3;
+            }
+
+            pagesContainer.style.transform = `translateX(${newTranslate}%)`;
+
+            // Show direction indicators
+            if (deltaX > 50 && currentPage > 1) {
+                document.getElementById('leftIndicator').classList.add('visible');
+            } else {
+                document.getElementById('leftIndicator').classList.remove('visible');
+            }
+            if (deltaX < -50 && currentPage < totalPages) {
+                document.getElementById('rightIndicator').classList.add('visible');
+            } else {
+                document.getElementById('rightIndicator').classList.remove('visible');
+            }
+        }
+    }, { passive: true });
+
+    pagesContainer.addEventListener('touchend', function(e) {
+        document.getElementById('leftIndicator').classList.remove('visible');
+        document.getElementById('rightIndicator').classList.remove('visible');
+
+        if (!isSwiping) return;
+
+        touchEndX = e.changedTouches[0].clientX;
+        const deltaX = touchEndX - touchStartX;
+        const threshold = 50;
+
+        if (deltaX > threshold && currentPage > 1) {
+            showPage(currentPage - 1);
+        } else if (deltaX < -threshold && currentPage < totalPages) {
+            showPage(currentPage + 1);
+        } else {
+            showPage(currentPage);
+        }
+    }, { passive: true });
+
+    // Keyboard navigation (for testing on desktop)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            changePage(1);
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            changePage(-1);
+        } else if (e.key === 'Escape') {
+            toggleTOC(false);
+        }
+    });
+
+    // Show swipe hint for first-time users
+    function showSwipeHint() {
+        if (!localStorage.getItem('exponentials_hint_shown')) {
+            const hint = document.getElementById('swipeHint');
+            hint.classList.add('visible');
+            setTimeout(() => {
+                hint.classList.remove('visible');
+                localStorage.setItem('exponentials_hint_shown', 'true');
+            }, 2500);
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        createDots();
+
+        // Restore last page
+        const savedPage = localStorage.getItem('exponentials_page');
+        if (savedPage) {
+            showPage(parseInt(savedPage), false);
+        } else {
+            showPage(1, false);
+        }
+
+        setTimeout(showSwipeHint, 1000);
+    });
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+            console.log('Service worker registration failed:', err);
+        });
+    }
+
+    // Disable context menu and copy protection
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p' || e.key === 'c')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+
+</body>
+</html>
