@@ -714,7 +714,7 @@
 
             <!-- Page 14 -->
             <div class="page" data-page="14" id="page-14">
-                <figure><img src="images/image6.png" alt="Diagram"></figure>
+                <figure><video autoplay loop muted playsinline src="images/e_consolidation.mp4" alt="Diagram" style="max-width: 75%;"></video></figure>
                 <div class="key-concept">
                     <p>\(e\) is the number for which the gradient of
                         the curve \(y=e^{x}\) at the point \(\left(0,1\right)\) is \(1\).</p>
@@ -739,64 +739,79 @@
                     <p>This led us to the definition of \(e\) as the number for which
                         \[\lim_{h\to0}\frac{e^{h}-1}{h}=1\]</p>
                     <p>Now, we are going to go back to graphs and use this
-                        property to show that, if \(f(x)=e^{x}\), then \[f'(x)=f(x)\]
+                        property to show that, if \(f(x)=e^{x}\), then \[f'(x)=e^x\]
                         for all values of \(x\), not only when \(x=0\).</p>
                 </div>
             </div>
 
             <!-- Page 16 -->
             <div class="page" data-page="16" id="page-16">
+                <div class="intro">
+                    <p>
+                        We'll start by finding the gradient of the tangent when \(x=1\)
+                    </p>
+                </div>
                 <div class="exercise">Here is the graph \(y=e^x\). What is the gradient of the red line?</div>
-                <figure><img src="images/part2_image1.png" alt="Diagram showing connections"></figure>
+                <figure><img src="images/image23.png" alt="Diagram showing connections"></figure>
             </div>
 
             <!-- Page 17 -->
             <div class="page" data-page="17" id="page-17">
                 <div class="exercise">Here is the graph \(y=e^x\). What is the gradient of the red line?</div>
-                <figure><img src="images/part2_image1.png" alt="Diagram showing connections"></figure>
-                <div class="answer">gradient\(=\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\)</div>
-                <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\).</div>
+                <figure><img src="images/image24.png" alt="Diagram showing connections"></figure>
+                <div class="answer">gradient\(=\displaystyle{\frac{e^{1+h}-e}{h}}\)</div>
+                <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{1+h}-e}{h}}\).</div>
             </div>
 
             <!-- Page 18 -->
             <div class="page" data-page="18" id="page-18">
-                <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{x+h}-e^{x}}{h}}\).</div>
+                <div class="exercise">Factorize the top of the fraction \(\displaystyle{\frac{e^{1+h}-e}{h}}\).</div>
                 <div class="answer">\[\begin{aligned}
-                    \text{gradient}&=\frac{e^{x+h}-e^{x}}{h}\\[2em]
-                    &=\frac{e^x e^h-e^{x}}{h}\\[2em]
-                    &=\frac{e^x \left(e^h-1\right)}{h}\\[2em]
-                    &={e^{x}\cdot\frac{e^{h}-1}{h}}
+                    \text{gradient}&=\frac{e^{1+h}-e}{h}\\[1em]
+                    &=\frac{e^1\times e^h-e}{h}\\[1em]
+                    &=\frac{e \left(e^h-1\right)}{h}={e\times\frac{e^{h}-1}{h}}
                     \end{aligned}\]</div>
-                <div class="exercise">What is the gradient of the tangent at the point \((x,e^{x})\) as a limit?</div>
+                <div class="exercise">What is the gradient of the tangent at the point \((1,e)\) as a limit?</div>
+                <figure style="width: 72%; margin: 0 auto;"><img src="images/image25.png" alt="Diagram showing connections"></figure>
+
             </div>
 
             <!-- Page 19 -->
             <div class="page" data-page="19" id="page-19">
-                <div class="exercise">What is the gradient of the tangent at the point \((x,e^{x})\) as a limit?</div>
+                <div class="exercise">What is the gradient of the tangent at the point \((1,e)\) as a limit?</div>
+                <figure style="width: 60%; margin: 0 auto;"><img src="images/image25.png" alt="Diagram showing connections"></figure>
+            
                 <div class="answer">
+                    As \(h\) gets smaller, the red line approaches the light-blue 
+                    tangent, so that 
                     \[\begin{aligned}
-                    \text{gradient}&=\lim_{h\to 0}{e^{x}\cdot\frac{e^{h}-1}{h}}
+                    \text{gradient of tangent}&=\lim_{h\to 0}{e\times\frac{e^{h}-1}{h}}
                     \end{aligned}\]
                 </div>
                 <div class="exercise">
-                    <p>Explain why this is the same as \[{e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
+                    <p>Explain why this is the same as \[{e\times\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
                 </div>
             </div>
 
             <!-- Page 20 -->
             <div class="page" data-page="20" id="page-20">
                 <div class="exercise">
-                    <p>Explain why \[\lim_{h\to 0}e^{x}\cdot\frac{e^{h}-1}{h}\] is the same as \[{e^{x}\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
+                    <p>Explain why \[\lim_{h\to 0}e\times\frac{e^{h}-1}{h}\] is the same as \[{e\times\lim_{h\to0}\frac{e^{h}-1}{h}}\]</p>
                 </div>
                 <div class="answer">
                     As \(h\) changes, \(\frac{e^{h}-1}{h}\) changes. If I multiply
-                    this fraction by a number and then take the limit as \(h\to0\),
+                    this fraction by a number (such as \(e\)) and then take the limit as \(h\to0\),
                     this is the same as taking the limit first and then multiplying by
-                    a number. But, as far as \(h\) is concerned, \(e^x\) is just a number.
+                    a number. This is a tiny technical point. I hesitate to say this, but 
+                    it's not something to worry about. Just move on!
                 </div>
                 <div class="exercise">
-                    If \(f(x)=e^{x}\), what is \(f'(x)\)?</div>
-            </div>
+                    <p>If \(y=e^{x}\), what is \(\displaystyle{\frac{\mathrm{d}y}{\mathrm{d}x}}\) when \(x=1\)?</p>
+                    <p>If \(f(x)=e^{x}\), what is \(f'(1)\)?</p>
+                </div>
+                
+
+                </div>
 
             <!-- Page 21 -->
             <div class="page" data-page="21" id="page-21">
